@@ -258,7 +258,7 @@
   "empty": "Type or paste your request first.",
   "recommended": "Recommended",
   "addToMessage": "Add to message",
-  "moreExperts": "More experts",
+  "moreExperts": "Show more experts",
   "fewerExperts": "Fewer experts",
   "hint": "Adds commands to the start of your message. Nothing is sent until you press Enter.",
   "needExperts": "Need an expert? Tap me"
