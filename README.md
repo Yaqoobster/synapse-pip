@@ -1,8 +1,9 @@
 # Synapse Pip (on-page helper for claude.ai)
 
-Pip is a small parrot that sits on the claude.ai message box. While you type it can suggest
-experts; its bubble adds Synapse commands (like `+stats consult` or `#reviewer`) to the start
-of your message. **It never sends anything and makes no network requests.**
+Pip is a small parrot that sits on the claude.ai message box. It watches you type, suggests
+experts, and its bubble adds Synapse commands (like `+stats review` or `#review`) to the start
+of your message. **It never sends anything.** Its only network request is to download its own
+settings file (`pip-config.json`) from this repo, so labels and experts stay current without updates.
 
 This repo is published automatically — do not edit it by hand. Source and docs live in the
 private Synapse plugin repo (`extras/pip-userscript/`, ADR 0009).
