@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Synapse Pip
 // @namespace    synapse
-// @version      1.20261120.034405
+// @version      1.20261121.173224
 // @description  Pip, the Synapse helper, on claude.ai: watches you type, suggests experts, and adds setup commands to your message. Never sends anything.
 // @match        https://claude.ai/*
 // @run-at       document-idle
@@ -20,7 +20,7 @@
   "use strict";
   // Built-in settings (fallback). Live settings replace them — see "live settings" below. Shape (schema 1):
   // {experts:[[name,title,blurb,specialties,use_when,[triggers]]], modes:[[cmd,label,desc]], labels:{…}, modeRules:{mode:[regex]}}
-  let DATA = {"schema":1,"experts":[["stats","Statistician","Study design, sample size, the right test","unit of replication and n · power and sample size · choosing and checking the test or model · mixed models and nested data · multiplicity · effect sizes and uncertainty","you have numbers, n, p-values, groups or a design to plan or check",["p-value","p<","significan","statistic","power","sample size","n=","replicate","pseudoreplic","t-test","anova","mixed model","regression","correlation","confidence interval","effect size","multiple comparison","fdr","batch","normaliz","differential expression","survival","kaplan","cox","bootstrap","bayesian","randomiz","blind"]],["bio","Biologist","Mechanism, model systems, assay validity","cell and molecular mechanism · model-system fit (cell lines, organoids, mice, patient samples) · assay and marker validity · controls and orthogonal validation · physiology · cancer and the tumour microenvironment","a claim is about how a biological system works, or depends on a model, assay or marker",["biology","biological","cellular","protein","genetic","gene expression","physiolog","mechanism","pathway","tumor","tumour","cancer","metasta","niche","platelet","neutrophil","macrophage","t cell","immune","ctc","circulating tumor","microenvironment","mouse","pdx","gemm","xenograft","cell line","organoid","in vivo","in vitro","knockout","crispr","sirna","antibody","marker","staining","flow cytometry","immunofluorescence","scrna","single-cell","spatial","transcriptom","lnp","nanoparticle"]],["physics","Physicist","Equations, scaling and physical limits behind any system","dimensional analysis and scaling · conservation laws and boundary conditions · governing equations (mechanics, transport, kinetics, statistical mechanics, optics) · order-of-magnitude estimates · analytical vs numerical solutions, error and sensitivity","a result depends on forces, flow, diffusion, kinetics, energy, optics or a mathematical model — or a number needs a sanity check against physical limits",["physics","physical","equation","mechanics","mechanical","force","stress","strain","shear","viscosity","viscous","reynolds","fluid","flow rate","diffusion","diffusivity","transport","kinetics","rate constant","binding energy","thermodynamic","entropy","free energy","dimensionless","dimensional","units","scaling","order of magnitude","differential equation","ode","pde","boundary condition","conservation","optics","optical","photon","wavelength","refractive","point spread","signal-to-noise","fourier","spectral","simulation","finite element","monte carlo","biophysic","elastic","stiffness","modulus","adhesion","brownian","stokes","laminar","turbulent"]],["architect","Software architect","Code and pipeline structure, no hardcoding","modular pipeline design · config instead of hardcoding · interfaces and contracts · reproducible environments · testing · QuPath/Python/R tooling","you are writing, refactoring or planning code, scripts or an analysis pipeline",["pipeline","refactor","architecture","module","modular","hardcod","config","yaml","package","function","class","script","notebook","jupyter","python","groovy","qupath","workflow","snakemake","nextflow","api","interface","plugin","registry","reproducib","environment","conda","test","pytest","cli"]],["editor","Science editor","Clarity, structure and claims in writing","argument structure · claim–evidence match and hedging · concision and flow · journal and grant conventions · responses to reviewers","you are drafting or revising a manuscript, abstract, grant, email or response",["write","draft","edit","rewrite","abstract","manuscript","paper","introduction","discussion","cover letter","personal statement","essay","application","grant","aims","response to reviewers","rebuttal","email","tone","wording","concise","clarity","flow"]]],"modes":[["#review","Review my work","Problems, ranked by importance"],["#teach","Teach me","Guide me with questions"],["#build","Build with me","Plan and make it together"]],"labels":{"off":"Off","advise":"Advise","review":"Review","adviseHint":"the expert shapes what Claude writes or builds.","reviewHint":"the expert reviews it separately and gives a verdict; pick two or more to compare.","expertsHeading":"2 · Bring in experts (optional)","modesHeading":"How should Claude work?","info":"What this expert does","specialises":"Specialises in","useWhen":"Use when","tooMany":"At most two experts can advise at once.","empty":"Type or paste your request first.","recommended":"Recommended","addToMessage":"Add to message","moreExperts":"Show more experts","fewerExperts":"Fewer experts","hint":"Adds commands to the start of your message. Nothing is sent until you press Enter.","needExperts":"Need an expert? Tap me"},"modeRules":{"reviewer":["\\breview\\b","\\bcritique\\b","\\bpeer[- ]review","\\bcheck (this|my)\\b","\\bevaluate\\b","\\bis (this|that|it) (right|correct|valid|sound|fine|ok|okay|good enough)\\b","\\bdoes (this|it) hold\\b","\\bpoke holes\\b","\\bfeedback on\\b","\\bwhat'?s wrong\\b","\\bsanity[- ]check\\b"],"mentor":["^\\s*why\\b","\\bwhy (does|do|is|are|would)\\b","\\bhow (does|do|is|are)\\b","\\bexplain\\b","\\bhelp me understand\\b","\\bteach me\\b","\\bwhat (is|are) (a |an |the )?\\w+","\\bi don'?t (get|understand)\\b"],"collaborator":["\\bdesign\\b","\\bplan\\b","\\bbuild\\b","\\blet'?s\\b","\\bcreate\\b","\\bimplement\\b","\\brefactor\\b","\\bdraft\\b","\\bset up\\b","\\bwrite (a|the|me)\\b","\\bdebug","\\bfix\\b","\\bbug\\b","\\berror\\b","\\btraceback\\b","\\bnot working\\b","\\bbroken\\b"]}};
+  let DATA = {"schema":1,"experts":[["stats","Statistician","Study design, sample size, the right test","unit of replication and n · power and sample size · choosing and checking the test or model · mixed models and nested data · multiplicity · effect sizes and uncertainty","you have numbers, n, p-values, groups or a design to plan or check",["p-value","p<","statistically significant","significance","not significant","significant difference","statistic","power","sample size","n=","replicate","pseudoreplic","t-test","anova","mixed model","regression","correlation","confidence interval","effect size","multiple comparison","fdr","batch","normaliz","differential expression","survival","kaplan","cox","bootstrap","bayesian","randomiz","blind"]],["bio","Biologist","Mechanism, model systems, assay validity","cell and molecular mechanism · model-system fit (cell lines, organoids, mice, patient samples) · assay and marker validity · controls and orthogonal validation · physiology · cancer and the tumour microenvironment","a claim is about how a biological system works, or depends on a model, assay or marker",["biology","biological","cellular","protein","genetic","gene expression","physiolog","mechanism","pathway","tumor","tumour","cancer","metasta","niche","platelet","neutrophil","macrophage","t cell","immune","ctc","circulating tumor","microenvironment","mouse","pdx","gemm","xenograft","cell line","organoid","in vivo","in vitro","knockout","crispr","sirna","antibody","marker","staining","flow cytometry","immunofluorescence","scrna","single-cell","spatial","transcriptom","lnp","nanoparticle"]],["physics","Physicist","Equations, scaling and physical limits behind any system","dimensional analysis and scaling · conservation laws and boundary conditions · governing equations (mechanics, transport, kinetics, statistical mechanics, optics) · order-of-magnitude estimates · analytical vs numerical solutions, error and sensitivity","a result depends on forces, flow, diffusion, kinetics, energy, optics or a mathematical model — or a number needs a sanity check against physical limits",["physics","physical","equation","mechanics","mechanical","force","stress","strain","shear","viscosity","viscous","reynolds","fluid","flow rate","diffusion","diffusivity","transport","kinetics","rate constant","binding energy","thermodynamic","entropy","free energy","dimensionless","dimensional","units","scaling","order of magnitude","differential equation","ode","pde","boundary condition","conservation","optics","optical","photon","wavelength","refractive","point spread","signal-to-noise","fourier","spectral","simulation","finite element","monte carlo","biophysic","elastic","stiffness","modulus","adhesion","brownian","stokes","laminar","turbulent"]],["architect","Software architect","Code and pipeline structure, no hardcoding","modular pipeline design · config instead of hardcoding · interfaces and contracts · reproducible environments · testing · QuPath/Python/R tooling","you are writing, refactoring or planning code, scripts or an analysis pipeline",["pipeline","refactor","architecture","module","modular","hardcod","config","yaml","package","function","class","script","notebook","jupyter","python","groovy","qupath","workflow","snakemake","nextflow","api","interface","plugin","registry","reproducib","environment","conda","test","pytest","cli"]],["editor","Science editor","Clarity, structure and claims in writing","argument structure · claim–evidence match and hedging · concision and flow · journal and grant conventions · responses to reviewers","you are drafting or revising a manuscript, abstract, grant, email or response",["write","draft","edit","rewrite","abstract","manuscript","paper","introduction","discussion","cover letter","personal statement","essay","application","grant","aims","response to reviewers","rebuttal","email","tone","wording","concise","clarity","flow"]]],"modes":[["#review","Review my work","Problems, ranked by importance"],["#teach","Teach me","Guide me with questions"],["#build","Build with me","Plan and make it together"]],"labels":{"off":"Off","advise":"Advise","review":"Review","adviseHint":"the expert shapes what Claude writes or builds.","reviewHint":"the expert reviews it separately and gives a verdict; pick two or more to compare.","expertsHeading":"2 · Bring in experts (optional)","modesHeading":"How should Claude work?","info":"What this expert does","specialises":"Specialises in","useWhen":"Use when","tooMany":"At most two experts can advise at once.","empty":"Type or paste your request first.","recommended":"Recommended","addToMessage":"Add to message","added":"added","moreExperts":"Show more experts","fewerExperts":"Fewer experts","hint":"Adds commands to the start of your message. Nothing is sent until you press Enter.","needExperts":"Need an expert? Tap me"},"modeRules":{"reviewer":["\\breview\\b","\\bcritique\\b","\\bpeer[- ]review","\\bcheck (this|my)\\b","\\bevaluate\\b","\\bis (this|that|it) (right|correct|valid|sound|fine|ok|okay|good enough)\\b","\\bdoes (this|it) hold\\b","\\bpoke holes\\b","\\bfeedback on\\b","\\bwhat'?s wrong\\b","\\bsanity[- ]check\\b"],"mentor":["^\\s*why\\b","\\bwhy (does|do|is|are|would)\\b","\\bhow (does|do|is|are)\\b","\\bexplain\\b","\\bhelp me understand\\b","\\bteach me\\b","\\bwhat (is|are) (a |an |the )?\\w+","\\bi don'?t (get|understand)\\b"],"collaborator":["\\bdesign\\b","\\bplan\\b","\\bbuild\\b","\\blet'?s\\b","\\bcreate\\b","\\bimplement\\b","\\brefactor\\b","\\bdraft\\b","\\bset up\\b","\\bwrite (a|the|me)\\b","\\bdebug","\\bfix\\b","\\bbug\\b","\\berror\\b","\\btraceback\\b","\\bnot working\\b","\\bbroken\\b"]}};
   const CONFIG_URL = "https://raw.githubusercontent.com/Yaqoobster/synapse-pip/main/pip-config.json", CONFIG_TTL = 10 * 60 * 1000, CFG_KEY = "synapse-pip-config";
   const KEY = "synapse-pip-hidden";
   const MIN_CHARS = 60, IDLE_MS = 1000, CHIRP_MS = 5000, FLAP_MS = 700, MIN_UP = 260; // MIN_UP: room above that is enough to open upward
@@ -29,6 +29,15 @@
     get: k => { try { return localStorage.getItem(k); } catch { return mem[k] ?? null; } },
     set: (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { mem[k] = v; } } };
   const CMD_RE = /(^|\s)[#@＠+][a-z]/i;
+  // Commands are stripped before scoring (they used to block recommendations entirely), and
+  // experts already in the message are reported so their rows can say "added".
+  const CMD_TOKEN_RE = /(^|\s)[#@＠+][a-z][\w\-]*(?:\s+(?:advise|review|consult)\b)?/gi;
+  const stripCmds = text => (text || "").replace(CMD_TOKEN_RE, " ").replace(/\s+/g, " ").trim();
+  function inMessage(text) { // {name: "advise"|"review"} for +name [advise|review|consult] already typed
+    const out = {}, re = /(?:^|\s)\+([a-z][\w\-]*)(?:\s+(advise|review|consult)\b)?/gi;
+    let m; while ((m = re.exec(text || ""))) out[m[1].toLowerCase()] = m[2] && m[2].toLowerCase() !== "advise" ? "review" : "advise";
+    return out;
+  }
   let TITLE = {}, MODE_RULES = [], L = {};
   function compile() {
     TITLE = Object.fromEntries(DATA.experts.map(e => [e[0], e[1]]));
@@ -113,12 +122,13 @@
     }
     return ties[0];
   }
-  function recommend(text) {
-    if (!text || CMD_RE.test(text)) return null;
+  function recommend(raw) {
+    const text = stripCmds(raw), have = inMessage(raw);
+    if (!text) return null;
     const hits = suggestHits(text);
     if (!hits.length) return null;
     const mode = detectMode(text), top = hits.slice(0, 2).map(h => h[0]), review = mode === "reviewer";
-    const cmds = top.map(n => `+${n} ${review ? "review" : "advise"}`);
+    const cmds = top.filter(n => !have[n]).map(n => `+${n} ${review ? "review" : "advise"}`);
     const words = [...new Set(hits.slice(0, 2).flatMap(h => h[1]))].slice(0, 3);
     return { cmds, experts: top, review, mode,
       label: `${review ? L.review : L.advise} · ${top.map(n => TITLE[n]).join(" + ")}`,
@@ -163,6 +173,12 @@
   button.c{font:inherit;font-size:11px;padding:3px 7px;border-radius:7px;border:1px solid var(--bd);background:var(--b2);color:var(--fg);cursor:pointer;white-space:nowrap}
   button.c:hover{border-color:var(--ac)}button.c:disabled{opacity:.45;cursor:default}
   button.c.recb{background:${GRAD};color:${MINT};border-color:transparent;font-weight:600}
+  .x.recx{background:${GRAD};color:${MINT};border-radius:10px;border-top-color:transparent;padding:6px 8px;margin:4px 0}
+  .x.recx small,.x.recx .det,.x.recx .inf,.x.recx .sug{color:#d1fae5}
+  .x.recx button.c{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff}
+  .x.recx button.c.recb{background:rgba(255,255,255,.28);border-color:#fff}
+  .addd{color:var(--ac);font-size:10px;font-weight:600;margin-left:4px}.x.recx .addd{color:#bbf7d0}
+  button.c.inmsg{outline:2px solid var(--ac);outline-offset:-2px}
   .r{display:flex;flex-wrap:wrap;gap:6px}.st{font-size:12px;color:var(--ac);margin-top:6px}.st:empty{display:none}
   .more{margin-top:6px}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
@@ -215,14 +231,16 @@
     });
   }
   renderStatic();
-  function renderExperts(sugg) {
+  function renderExperts(sugg, have = {}) {
     const ex = $("#ex"); ex.textContent = "";
     const list = [...DATA.experts].sort((a, b) => sugg.includes(b[0]) - sugg.includes(a[0]));
     const shown = sugg.length && !showAll ? list.filter(e => sugg.includes(e[0])) : list;
     shown.forEach(([n, title, blurb, specialties, useWhen]) => {
       const row = document.createElement("div"); row.className = "x"; row.dataset.n = n;
       row.innerHTML = `<div class="n"><b></b><button class="inf" aria-label="${L.info || "About"}" title="${L.info || "About"}">ⓘ</button>` +
-        `${sugg.includes(n) ? '<span class="sug">suggested</span>' : ""}<small></small><div class="det"></div></div>`;
+        `${sugg.includes(n) ? '<span class="sug">suggested</span>' : ""}` +
+        `${have[n] ? `<span class="addd">${L.added || "added"}</span>` : ""}<small></small><div class="det"></div></div>`;
+      if (rec && rec.experts.includes(n)) row.classList.add("recx");
       row.querySelector("b").textContent = title; row.querySelector("small").textContent = blurb;
       row.querySelector(".det").textContent = `${L.specialises}: ${specialties}. ${L.useWhen}: ${useWhen}.`;
       row.querySelector(".inf").addEventListener("click", ev => { ev.stopPropagation(); row.classList.toggle("showd"); fit(); });
@@ -230,6 +248,7 @@
       [[L.advise, `+${n} advise`, false], [L.review, `+${n} review`, true]].forEach(([l, cmd, isReview]) => {
         const b = document.createElement("button"); b.className = "c"; b.textContent = l; b.dataset.cmd = cmd;
         if (rec && rec.experts.includes(n) && rec.review === isReview) b.classList.add("recb");
+        if (have[n] === (isReview ? "review" : "advise")) b.classList.add("inmsg");
         bt.appendChild(b);
       });
       row.appendChild(bt);
@@ -241,6 +260,7 @@
   function renderRec() {
     const box = $("#rec"); box.hidden = !rec;
     if (rec) { box.querySelector(".rl").textContent = rec.label; box.querySelector(".rw").textContent = rec.why; }
+    $("#recadd").hidden = !rec || !rec.cmds.length;
   }
 
   // ---------- theme, position, fit ----------
@@ -280,7 +300,7 @@
     if (o) {
       const ed = composer(), txt = ed ? textOf(ed) : "";
       rec = recommend(txt); showAll = false;
-      renderRec(); renderExperts(suggest(txt)); $("#menu").disabled = !!txt; st.textContent = "";
+      renderRec(); renderExperts(suggest(stripCmds(txt)), inMessage(txt)); $("#menu").disabled = !!txt; st.textContent = "";
       wrap.classList.remove("badge"); stopChirp(); fit();
     }
   }
@@ -367,10 +387,13 @@
     const b = e.target.closest("button"); if (!b || b.disabled) return;
     const ed = composer(); if (!ed) return;
     if (b.id === "hide") { store.set(KEY, "1"); place(); return; }
-    if (b.id === "more") { showAll = !showAll; renderExperts(suggest(textOf(ed))); fit(); return; }
+    if (b.id === "more") { showAll = !showAll; renderExperts(suggest(stripCmds(textOf(ed))), inMessage(textOf(ed))); fit(); return; }
     if (b.id === "menu") { if (!textOf(ed)) { apply(ed, "@menu"); st.textContent = "Added @menu — press Enter to open the full panel."; } return; }
     if (b.id === "recadd" && rec) st.textContent = rec.cmds.map(c => apply(ed, c)).join(" · ");
     else if (b.dataset.cmd) st.textContent = apply(ed, b.dataset.cmd);
+    if (b.id === "recadd" || b.dataset.cmd) { // show what is now in the message: "added", highlight kept
+      const txt = textOf(ed); rec = recommend(txt); renderRec(); renderExperts(suggest(stripCmds(txt)), inMessage(txt)); fit();
+    }
     $("#menu").disabled = !!textOf(ed);
   });
   document.addEventListener("click", e => { if (!e.composedPath().includes(host)) setOpen(false); }, true);
@@ -386,7 +409,7 @@
   document.documentElement.appendChild(host);
   theme(); place(); look();
   setInterval(() => { theme(); place(); }, 700);
-  window.__synapsePip = { version: "1.20261120.034405", source: "built-in", suggest, detectMode, recommend, composer, root,
+  window.__synapsePip = { version: "1.20261121.173224", source: "built-in", suggest, detectMode, recommend, composer, root,
     labels: () => L, reload: () => loadSettings(true) };
   loadSettings(false);
 })();
