@@ -173,8 +173,8 @@
     "config",
     "yaml",
     "package",
-    "function",
-    "class",
+    "python function",
+    "class definition",
     "script",
     "notebook",
     "jupyter",
@@ -184,16 +184,19 @@
     "workflow",
     "snakemake",
     "nextflow",
-    "api",
+    "api endpoint",
+    "rest api",
     "interface",
     "plugin",
     "registry",
     "reproducib",
     "environment",
     "conda",
-    "test",
+    "unit test",
+    "test suite",
     "pytest",
-    "cli"
+    "command line",
+    "cli tool"
    ]
   ],
   [
@@ -205,7 +208,8 @@
    [
     "write",
     "draft",
-    "edit",
+    "edit this",
+    "editing",
     "rewrite",
     "abstract",
     "manuscript",
@@ -217,15 +221,16 @@
     "essay",
     "application",
     "grant",
-    "aims",
+    "specific aims",
     "response to reviewers",
     "rebuttal",
     "email",
-    "tone",
+    "tone of",
     "wording",
     "concise",
     "clarity",
-    "flow"
+    "prose flow",
+    "reads well"
    ]
   ]
  ],
@@ -289,7 +294,11 @@
    "\\bhelp me understand\\b",
    "\\bteach me\\b",
    "\\bwhat (is|are) (a |an |the )?\\w+",
-   "\\bi don'?t (get|understand)\\b"
+   "\\bi don'?t (get|understand)\\b",
+   "\\bdoes (that|this|it) mean\\b",
+   "\\bwould it (not )?be (better|more|worse|faster|cheaper)\\b",
+   "\\bis (it|there|this) (better|more efficient|worse|optimal)\\b",
+   "\\bwhat (makes|is the difference)\\b"
   ],
   "collaborator": [
    "\\bdesign\\b",
